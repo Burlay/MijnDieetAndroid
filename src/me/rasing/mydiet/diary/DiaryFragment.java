@@ -1,5 +1,8 @@
 package me.rasing.mydiet.diary;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 import me.rasing.mydiet.R;
 import me.rasing.mydiet.util.MyDietProvider;
 import android.app.Fragment;
@@ -48,6 +51,14 @@ public class DiaryFragment extends Fragment implements LoaderManager.LoaderCallb
 		
 		LoaderManager lm = getLoaderManager();
 	    lm.initLoader(LOADER_ID, null, this);
+	    
+	    // Look up the AdView as a resource and load a request.
+	    AdView adView = (AdView) rootView.findViewById(R.id.adView);
+	    AdRequest adRequest = new AdRequest.Builder()
+        	.addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+        	.addTestDevice("89FE67F5D07D5C33D2A61AA28C51D417")
+        	.build();
+	    adView.loadAd(adRequest);
 		
         return rootView;
     }
