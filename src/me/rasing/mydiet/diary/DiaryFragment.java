@@ -2,7 +2,11 @@ package me.rasing.mydiet.diary;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
+import me.rasing.mydiet.MyDiet;
+import me.rasing.mydiet.MyDiet.TrackerName;
 import me.rasing.mydiet.R;
 import me.rasing.mydiet.util.MyDietProvider;
 import android.app.Fragment;
@@ -11,6 +15,7 @@ import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,6 +64,17 @@ public class DiaryFragment extends Fragment implements LoaderManager.LoaderCallb
         	.addTestDevice("89FE67F5D07D5C33D2A61AA28C51D417")
         	.build();
 	    adView.loadAd(adRequest);
+	    
+        // Get tracker.
+        Tracker t = ((MyDiet) getActivity().getApplication()).getTracker(
+            TrackerName.APP_TRACKER);
+
+        // Set screen name.
+        // Where path is a String representing the screen name.
+        t.setScreenName("/Diary");
+
+        // Send a screen view.
+        t.send(new HitBuilders.AppViewBuilder().build());
 		
         return rootView;
     }

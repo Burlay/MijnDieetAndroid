@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.util.Log;
 
 public class MyDietProvider extends ContentProvider {
 	public static final String AUTHORITY = "me.rasing.mydiet.util.MyDietProvider";
@@ -47,18 +48,17 @@ public class MyDietProvider extends ContentProvider {
 		Cursor cursor = null;
 		switch (sUriMatcher.match(uri)) {
 		case ENTRIES:
-			cursor = db.rawQuery(
-					"SELECT "
-					+ Entries.COLUMN_NAME_DATE_OF_MEAL + ", "
-					+ " SUM(" + EntriesFoods.COLUMN_NAME_CALORIES + 
-					") AS " + EntriesFoods.COLUMN_NAME_CALORIES + ", "
+			String query = "SELECT "
+					+ "strftime('%Y-%m-%d', " + Entries.COLUMN_NAME_DATE_OF_MEAL + ") AS " + Entries.COLUMN_NAME_DATE_OF_MEAL + ", "
+					+ "SUM (" + EntriesFoods.COLUMN_NAME_CALORIES + ") AS " + EntriesFoods.COLUMN_NAME_CALORIES + ", "
 					+ Entries.TABLE_NAME + "." + Entries._ID
 					+ " FROM " + Entries.TABLE_NAME
 					+ " LEFT JOIN " + EntriesFoods.TABLE_NAME
 					+ " ON " + Entries.TABLE_NAME + "." + Entries._ID +
 					" = " + EntriesFoods.COLUMN_NAME_ENTRIES_ID
-					+ " GROUP BY " + Entries.TABLE_NAME + "." + Entries._ID,
-					null);
+					+ " GROUP BY strftime('%Y-%m-%d', " + Entries.COLUMN_NAME_DATE_OF_MEAL + ")";
+			Log.e("QUERY", ">>>>" + query);
+			cursor = db.rawQuery(query, null);
 			break;
 		case FOODS:
 			qb.setTables(Foods.TABLE_NAME);

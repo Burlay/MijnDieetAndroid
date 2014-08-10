@@ -3,6 +3,7 @@ package me.rasing.mydiet.diary;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import me.rasing.mydiet.R;
@@ -21,8 +22,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
 public class NewEntryActivity extends Activity implements OnClickListener {
-	private static final DateFormat formatter = new SimpleDateFormat(
-			"yyyy-MM-dd'T'HH:mmZ", Locale.getDefault());
 	private NewEntryFragment fragment;
 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +57,10 @@ public class NewEntryActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.actionbar_done:
+			TimeZone tz = TimeZone.getTimeZone("UTC");
+			DateFormat formatter = new SimpleDateFormat(
+					"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+			formatter.setTimeZone(tz);
 			ContentValues values = new ContentValues();
 			values.put(Entries.COLUMN_NAME_GUID, UUID.randomUUID().toString());
 			values.put(Entries.COLUMN_NAME_DATE_OF_MEAL,
